@@ -55,4 +55,35 @@ class ToDoListTableViewController: UITableViewController {
         }
     }
 
+    @IBAction func AddButtonPressed(_ sender: UIBarButtonItem) {
+        
+        
+        var textField = UITextField()
+        
+        let alert = UIAlertController(title: "Add New Item", message: "Add Item", preferredStyle: .alert)
+        
+        let action = UIAlertAction(title: "Ok", style: .default) { (action) in
+            
+            
+            self.ItemArray.append(textField.text!)
+            
+            self.tableView.reloadData()
+         
+            
+        }
+        
+        
+        alert.addTextField { (alertText) in
+            
+            alertText.placeholder = "Enter name"
+            
+            textField = alertText
+        }
+        
+        
+        alert.addAction(action)
+        
+        present(alert, animated: true, completion: nil)
+    }
+    
 }
