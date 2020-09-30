@@ -12,10 +12,22 @@ class ToDoListTableViewController: UITableViewController {
 
     var ItemArray = ["Home","News","About"]
     
+    let defaults = UserDefaults.standard
+    
+    
+    
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
-       
+       if let item = defaults.value(forKey: "TodoeyList") as? [String]
+       {
+        
+        ItemArray = item
+        
+        }
+        
     }
 
     // MARK: - Table view data source
@@ -66,6 +78,9 @@ class ToDoListTableViewController: UITableViewController {
             
             
             self.ItemArray.append(textField.text!)
+            
+            
+            self.defaults.set(self.ItemArray, forKey: "TodoeyList")
             
             self.tableView.reloadData()
          
