@@ -12,15 +12,16 @@ class ToDoListTableViewController: UITableViewController {
 
     var ItemArray = [Item]()
     
-    let defaults = UserDefaults.standard
+   // let defaults = UserDefaults.standard
     
     
-    
+    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Item.plist")
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        print(dataFilePath)
         
         let newItem = Item()
         newItem.title = "Home"
@@ -58,18 +59,28 @@ class ToDoListTableViewController: UITableViewController {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         
-        cell.textLabel?.text = ItemArray[indexPath.row].title
         
-        if ItemArray[indexPath.row].done == true
-        {
-            cell.accessoryType = .checkmark
-            
-        }
-        else
-        {
-            cell.accessoryType = .none
-        }
+        let item = ItemArray[indexPath.row]
         
+        cell.textLabel?.text = item.title
+        
+        cell.accessoryType = item.done ? .checkmark : .none
+        
+        
+        
+        
+        
+        
+//        if ItemArray[indexPath.row].done == true
+//        {
+//            cell.accessoryType = .checkmark
+//
+//        }
+//        else
+//        {
+//            cell.accessoryType = .none
+//        }
+//
         
         return cell
     }
@@ -83,6 +94,8 @@ class ToDoListTableViewController: UITableViewController {
         
         
         ItemArray[indexPath.row].done = !ItemArray[indexPath.row].done
+        
+        self.saveItem()
         
 //        if tableView.cellForRow(at: indexPath)?.accessoryType == .some(.checkmark)
 //        {
@@ -113,15 +126,12 @@ class ToDoListTableViewController: UITableViewController {
             let newItem = Item()
             newItem.title = textField.text!
             
-            
-//            self.ItemArray.append(textField.text!)
-            
-            
             self.ItemArray.append(newItem)
             
-            self.defaults.set(self.ItemArray, forKey: "TodoeyList1")
+            //self.defaults.set(self.ItemArray, forKey: "TodoeyList1")
             
-            self.tableView.reloadData()
+            self.saveItem()
+           
          
             
         }
@@ -138,6 +148,28 @@ class ToDoListTableViewController: UITableViewController {
         alert.addAction(action)
         
         present(alert, animated: true, completion: nil)
+    }
+    
+    func saveItem()
+    {
+        let encoder = PropertyListEncoder()
+                   
+                   do
+                   {
+                   
+                       let data =  try encoder.encode(self.ItemArray)
+                       
+                       try data.write(to: self.dataFilePath!)
+                   
+                   }
+                   catch
+                   {
+                       print("Error to Encode \(error )")
+                   }
+                       
+                       
+                  // self.defaults.set(self.ItemArray, forKey: "News")
+                   self.tableView.reloadData()
     }
     
 }
