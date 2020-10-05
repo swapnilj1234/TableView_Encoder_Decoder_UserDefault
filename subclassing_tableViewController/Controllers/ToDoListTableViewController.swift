@@ -23,18 +23,9 @@ class ToDoListTableViewController: UITableViewController {
 
         print(dataFilePath)
         
-        let newItem = Item()
-        newItem.title = "Home"
-        newItem.done = true
-        ItemArray.append(newItem)
         
         
         
-        let newItem1 = Item()
-        newItem1.title = "News"
-        ItemArray.append(newItem1)
-        
-
         
 //       if let item = defaults.value(forKey: "TodoeyList") as? [String]
 //       {
@@ -42,6 +33,8 @@ class ToDoListTableViewController: UITableViewController {
 //        ItemArray = item
 //
 //        }
+        
+        loadItems()
         
     }
 
@@ -170,6 +163,25 @@ class ToDoListTableViewController: UITableViewController {
                        
                   // self.defaults.set(self.ItemArray, forKey: "News")
                    self.tableView.reloadData()
+    }
+    
+    
+    func  loadItems()
+    {
+        let data = try? Data(contentsOf: dataFilePath!)
+        
+         let decoder = PropertyListDecoder()
+        
+        do
+        {
+    
+            ItemArray = try decoder.decode([Item].self, from: data!)
+            
+        }
+        catch
+        {
+            print("cant decode data")
+        }
     }
     
 }
